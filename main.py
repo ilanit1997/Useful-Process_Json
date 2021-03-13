@@ -4,8 +4,9 @@ import os,glob
 import string
 
 
-def main(argv):
+def main():
     folder_path = "C:\\toscript"
+    #process json files in folder
     for filename in glob.glob(os.path.join(folder_path, '*.json')):
         with open(filename, encoding="utf8") as f:
             data = json.load(f)
@@ -14,10 +15,12 @@ def main(argv):
                 val = entry['value']
                 if val == "":
                     continue
-                case = is_only_punct(val)
+                case = is_only_punct(val) #process case val is empty punctuation
                 if handle_space(data, index, case) or handle_punct(data, index, case, tot_len, val):
+                #process cases val is space or punctuation
                     tot_len -= 1
                 elif punct_and_word(val):
+                #process case val consists of punctuation and word
                     handle_punct_and_word(data, index, val)
 
         #create new file with updated data
@@ -43,7 +46,7 @@ def append_sample(filename):
 
 def is_only_punct(str):
     """
-    Check which case we are at - one single whitespace or punctions with space before/after
+    Check which case we are at - one single whitespace or punctuation with space before/after
     :param str: word to check
     :return: "SPACE", "ONLY_PUNCT" according to matched case
     """
@@ -119,6 +122,11 @@ def handle_punct(data, index, case, tot_len, val):
         return True
 
 def punct_and_word(str):
+    """
+    Check if we are at punctuation and word case and handle accordingly
+    :param str: val to check
+    :return: true if first char is space and second char is space
+    """
     if str[0] in string.punctuation and str[1] == " ":
         for s in str:
             if s in string.ascii_letters:
@@ -138,7 +146,7 @@ def handle_punct_and_word(data, index, val):
 
 
 if __name__ == '__main__':
-    main(sys.argv)
+    main()
 
 
 
